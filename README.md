@@ -1,29 +1,26 @@
 # Mobile 11 — Flutter | AlertDialog e SnackBar
 
-Projeto desenvolvido em aula para praticar **mensagens de feedback ao usuário em Flutter**, utilizando `SnackBar` e `AlertDialog`.
+Projeto desenvolvido em aula para estudar diferentes formas de fornecer **feedback ao usuário em aplicações Flutter**, utilizando `AlertDialog` e `SnackBar`.
 
-Como exercício prático, foi desenvolvida uma calculadora capaz de realizar as quatro operações matemáticas básicas.
+Durante a aula foi utilizada uma calculadora como aplicação-base para implementar e testar os conceitos apresentados.
 
 ---
 
-## Objetivo da aula
+## 🎯 Objetivo da aula
 
-Praticar conceitos como:
+Compreender e praticar:
 
-- criação de interfaces com Flutter;
-- utilização de `StatefulWidget`;
-- gerenciamento de estado com `setState`;
-- captura de dados com `TextField`;
-- uso de `TextEditingController`;
-- conversão de valores com `double.tryParse`;
-- operações matemáticas;
 - exibição de mensagens com `SnackBar`;
-- criação de janelas modais com `AlertDialog`;
-- navegação com `Navigator.pop`.
+- criação de caixas de diálogo com `AlertDialog`;
+- utilização de `ScaffoldMessenger`;
+- utilização de `showDialog`;
+- interação com botões dentro de um alerta;
+- fechamento de diálogos com `Navigator.pop`;
+- criação de regras para definir qual feedback apresentar ao usuário.
 
 ---
 
-## Tecnologias utilizadas
+## 🛠️ Tecnologias utilizadas
 
 - Flutter
 - Dart
@@ -33,12 +30,13 @@ Praticar conceitos como:
 
 ---
 
-## Estrutura do projeto
+## 📂 Estrutura do repositório
 
 ```text
 mobile11/
 ├── 13 - Flutter - Alert e Toast.pdf
 ├── 14 - Exercício Alert e SnackBar.pdf
+├── README.md
 └── flutter_appcalculadora_completa/
     └── lib/
         └── main.dart
@@ -46,206 +44,170 @@ mobile11/
 
 ---
 
-## Funcionalidades
+# 📱 Aplicação utilizada
 
-A aplicação permite informar dois números e realizar as seguintes operações:
+Para praticar os conceitos da aula foi utilizada uma calculadora desenvolvida em Flutter.
+
+Ela permite realizar:
 
 - soma;
 - subtração;
 - multiplicação;
 - divisão.
 
-O resultado também é exibido diretamente na interface.
+A calculadora funciona como base para aplicar as regras de `AlertDialog` e `SnackBar`.
 
 ---
 
-## Entrada de dados
+# 📢 SnackBar
 
-Os valores são capturados utilizando dois `TextField` controlados por:
+O `SnackBar` permite apresentar uma mensagem temporária ao usuário sem interromper o fluxo principal da aplicação.
 
-```dart
-TextEditingController
-```
-
-Exemplo:
+No projeto foi criada a função:
 
 ```dart
-final TextEditingController numero1Controller = TextEditingController();
-final TextEditingController numero2Controller = TextEditingController();
-```
-
-Os textos digitados são convertidos para `double`:
-
-```dart
-double n1 = double.tryParse(numero1Controller.text) ?? 0;
-double n2 = double.tryParse(numero2Controller.text) ?? 0;
-```
-
-Caso o valor informado não seja válido, é utilizado `0`.
-
----
-
-## Gerenciamento de estado
-
-O resultado da operação é armazenado na variável:
-
-```dart
-double resultado = 0;
-```
-
-Sempre que uma operação é realizada, o valor é atualizado com:
-
-```dart
-setState(() {
-  resultado = n1 + n2;
-});
-```
-
-O `setState()` faz com que a interface seja reconstruída com o novo resultado.
-
----
-
-## SnackBar
-
-Na operação de soma, o aplicativo apresenta uma mensagem utilizando `SnackBar`.
-
-```dart
-ScaffoldMessenger.of(context).showSnackBar(
-  SnackBar(
-    content: Text(mensagem),
-    duration: const Duration(seconds: 3),
-  ),
-);
-```
-
-O `SnackBar` é utilizado para exibir uma mensagem temporária na tela sem interromper totalmente a interação do usuário.
-
-Exemplo utilizado:
-
-```dart
-mostrarToast("Resultado: $resultado");
-```
-
----
-
-## AlertDialog
-
-Na operação de subtração, o resultado é apresentado através de um `AlertDialog`.
-
-```dart
-showDialog(
-  context: context,
-  builder: (context) {
-    return AlertDialog(
-      title: const Text("Resultado"),
+void mostrarToast(String mensagem) {
+  ScaffoldMessenger.of(context).showSnackBar(
+    SnackBar(
       content: Text(mensagem),
-      actions: [
-        TextButton(
-          onPressed: () {
-            Navigator.pop(context);
-          },
-          child: const Text("Ok"),
-        ),
-      ],
-    );
-  },
-);
-```
-
-O `AlertDialog` cria uma janela modal que exige uma interação do usuário para ser fechada.
-
----
-
-## SnackBar x AlertDialog
-
-| Recurso | Comportamento |
-|---|---|
-| `SnackBar` | Exibe uma mensagem temporária na parte inferior da tela |
-| `AlertDialog` | Exibe uma janela modal sobre a interface |
-| `SnackBar` | Não interrompe completamente a interação |
-| `AlertDialog` | Requer uma ação do usuário para fechar |
-
----
-
-## Operações implementadas
-
-### Soma
-
-```dart
-resultado = n1 + n2;
-```
-
-Após a operação, o resultado também é mostrado através de um `SnackBar`.
-
-### Subtração
-
-```dart
-resultado = n1 - n2;
-```
-
-Após a operação, é exibido um `AlertDialog`.
-
-### Multiplicação
-
-```dart
-resultado = n1 * n2;
-```
-
-### Divisão
-
-```dart
-if (n2 == 0) {
-  resultado = double.nan;
-} else {
-  resultado = n1 / n2;
+      duration: const Duration(seconds: 3),
+    ),
+  );
 }
 ```
 
-Também foi incluído tratamento para evitar uma divisão normal por zero.
+Quando uma operação é realizada normalmente, a aplicação apresenta:
+
+```text
+OPERAÇÃO REALIZADA
+```
 
 ---
 
-## Interface
+# ⚠️ AlertDialog
 
-Os botões foram organizados em duas linhas utilizando `Row`.
+O `AlertDialog` é utilizado quando a aplicação precisa chamar a atenção do usuário e solicitar uma interação.
 
-Primeira linha:
-
-```text
-Somar | Subtrair
-```
-
-Segunda linha:
+No exercício foi criado um alerta com duas opções:
 
 ```text
-Multiplicar | Dividir
+SIM
+NÃO
 ```
 
-Cada operação utiliza `ElevatedButton.icon`, adicionando um ícone ao botão.
+Estrutura utilizada:
+
+```dart
+AlertDialog(
+  title: const Text("Atenção"),
+  content: Text(mensagem),
+  actions: [
+    TextButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text("SIM"),
+    ),
+    TextButton(
+      onPressed: () {
+        Navigator.pop(context);
+      },
+      child: const Text("NÃO"),
+    ),
+  ],
+);
+```
+
+O diálogo é fechado utilizando:
+
+```dart
+Navigator.pop(context);
+```
 
 ---
 
-## Fluxo da aplicação
+# 🧪 Exercício proposto
+
+O exercício consistiu em implementar uma regra para escolher automaticamente entre `AlertDialog` e `SnackBar` de acordo com o resultado da operação.
+
+Foi criada a função:
+
+```dart
+void verificarResultado() {
+  if (resultado < 0) {
+    mostrarAlerta(
+      "ATENÇÃO! RESULTADO MENOR QUE ZERO! DESEJA CONTINUAR?"
+    );
+  } else {
+    mostrarToast("OPERAÇÃO REALIZADA");
+  }
+}
+```
+
+Após realizar uma operação matemática, a aplicação executa:
+
+```dart
+verificarResultado();
+```
+
+---
+
+## 🔄 Fluxo implementado
 
 ```text
 Usuário informa os números
         ↓
-TextEditingController
+Escolhe uma operação
         ↓
-double.tryParse()
+Aplicação realiza o cálculo
         ↓
-Operação matemática
+verificarResultado()
         ↓
-setState()
-        ↓
-Atualização do resultado
-        ↓
-SnackBar / AlertDialog
+   Resultado < 0 ?
+      ↙       ↘
+    SIM       NÃO
+     ↓         ↓
+AlertDialog  SnackBar
+     ↓         ↓
+SIM / NÃO   Operação
+            realizada
 ```
 
 ---
 
-## Como executar
+## AlertDialog x SnackBar
+
+| Recurso | Utilização no exercício |
+|---|---|
+| `SnackBar` | Informa que a operação foi realizada |
+| `AlertDialog` | Alerta quando o resultado é menor que zero |
+| `ScaffoldMessenger` | Responsável pela exibição do `SnackBar` |
+| `showDialog` | Responsável por abrir o diálogo |
+| `Navigator.pop` | Fecha o `AlertDialog` |
+
+---
+
+## 🧠 Conceitos praticados
+
+- Flutter
+- Dart
+- `StatefulWidget`
+- `setState`
+- `TextEditingController`
+- `ScaffoldMessenger`
+- `SnackBar`
+- `showDialog`
+- `AlertDialog`
+- `TextButton`
+- `Navigator.pop`
+- estruturas condicionais
+- funções
+- interação com o usuário
+- feedback visual
+
+---
+
+## ▶️ Como executar
 
 Entre na pasta do projeto:
 
@@ -253,13 +215,13 @@ Entre na pasta do projeto:
 cd flutter_appcalculadora_completa
 ```
 
-Baixe as dependências:
+Instale as dependências:
 
 ```bash
 flutter pub get
 ```
 
-Execute o aplicativo:
+Execute:
 
 ```bash
 flutter run
@@ -267,34 +229,20 @@ flutter run
 
 ---
 
-## Conceitos praticados
+## ✅ Status
 
-- Flutter
-- Dart
-- StatefulWidget
-- State
-- setState
-- TextField
-- TextEditingController
-- double.tryParse
-- ElevatedButton
-- Row
-- ScaffoldMessenger
-- SnackBar
-- showDialog
-- AlertDialog
-- Navigator
-- tratamento de divisão por zero
+**Exercício concluído.**
+
+A aplicação implementa os dois mecanismos estudados na aula:
+
+```text
+Resultado negativo → AlertDialog
+Demais resultados → SnackBar
+```
 
 ---
 
-## Status
-
-✅ Atividade desenvolvida em aula para estudo de **AlertDialog, SnackBar e manipulação de estado no Flutter**.
-
----
-
-## Autor
+## 👨‍💻 Autor
 
 **Luan Araujo**
 
