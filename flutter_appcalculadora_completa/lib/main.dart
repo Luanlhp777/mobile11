@@ -49,8 +49,7 @@ class _TelaSomaState extends State<TelaSoma> {
       resultado = n1 + n2;
     });
 
-    mostrarToast("Resultado: $resultado");
-
+    verificarResultado();
   }
 
   // Subtrair
@@ -62,7 +61,7 @@ class _TelaSomaState extends State<TelaSoma> {
       resultado = n1 - n2;
     });
 
-    mostrarAlerta("Alerta: $resultado");
+    verificarResultado();
   }
 
   // Multiplicar
@@ -73,6 +72,8 @@ class _TelaSomaState extends State<TelaSoma> {
     setState(() {
       resultado = n1 * n2;
     });
+
+    verificarResultado();
   }
 
   // Dividir
@@ -80,15 +81,31 @@ class _TelaSomaState extends State<TelaSoma> {
     double n1 = double.tryParse(numero1Controller.text) ?? 0;
     double n2 = double.tryParse(numero2Controller.text) ?? 0;
 
-    setState(() {
-      if (n2 == 0) {
+    if (n2 == 0) {
+      setState(() {
         resultado = double.nan;
-      } else {
-        resultado = n1 / n2;
-      }
+      });
+
+      return;
+    }
+
+    setState(() {
+      resultado = n1 / n2;
     });
+
+    verificarResultado();
   }
 
+  // FUNÇÃO PARA VERIFICAR O RESULTADO
+  void verificarResultado() {
+    if (resultado < 0) {
+      mostrarAlerta("ATENÇÃO! RESULTADO MENOR QUE ZERO! DESEJA CONTINUAR?");
+    } else {
+      mostrarToast("OPERAÇÃO REALIZADA");
+    }
+  }
+
+  //---- SNACKBAR ----\\
   void mostrarToast(String mensagem){
     ScaffoldMessenger.of(context).showSnackBar(
       SnackBar(
@@ -98,19 +115,29 @@ class _TelaSomaState extends State<TelaSoma> {
     );
   }
 
-  void mostrarAlerta(String mensagem){
+  //---- ALERT ----\\
+  void mostrarAlerta(String mensagem) {
     showDialog(
       context: context,
-      builder: (context){
+      builder: (context) {
         return AlertDialog(
-          title: const Text("Resultado"),
+          title: const Text("Atenção"),
           content: Text(mensagem),
           actions: [
             TextButton(
-              onPressed: (){
+              onPressed: () {
+                print("Usuário escolheu SIM");
                 Navigator.pop(context);
               },
-              child: const Text("Ok"),
+              child: const Text("SIM"),
+            ),
+
+            TextButton(
+              onPressed: () {
+                print("Usuário escolheu NÃO");
+                Navigator.pop(context);
+              },
+              child: const Text("NÃO"),
             ),
           ],
         );
